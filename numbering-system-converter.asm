@@ -74,10 +74,10 @@ ValidateInput:
     #	None
     move $t0, $a1                           # t0 = current system
     la   $t1, ($a0)                         # load address of number
-    lb   $t2, 0($t1)			            # load first byte of number
+    lb   $t2, 0($t1)                        # load first byte of number
 
     ValidateLoop:
-    beqz $t2, EndValidation		            # if end of string, exit loop
+    beqz $t2, EndValidation                 # if end of string, exit loop
     # Check if character is valid for the given system
     sub  $t3, $t2, '0'
     blt  $t3, $t0, ValidDigit
@@ -91,24 +91,24 @@ ValidateInput:
     j    InvalidNumber
 
     ValidDigit:
-    addi $t1, $t1, 1		                # move to next char
-    lb   $t2, 0($t1)			            # load next byte of number
+    addi $t1, $t1, 1                        # move to next char
+    lb   $t2, 0($t1)                        # load next byte of number
     j    ValidateLoop
 
     InvalidNumber:
-    li   $v0, 4			                    # print string syscall
+    li   $v0, 4                             # print string syscall
     la   $a0, invalidNumberMessage
     syscall
     li   $v0, 10                            # syscall code for exiting the program
     syscall                                 # exit
 
     EndValidation:
-    jr   $ra				                # return from the validation function
+    jr   $ra                                # return from the validation function
 
 InvalidSystem:
-    li   $v0, 4			                    # syscall for printing string
+    li   $v0, 4                             # syscall for printing string
     la   $a0, invalidSystemMessage	        # load the message address
-    syscall				                    # print the message
+    syscall                                 # print the message
     li   $v0, 10                            # syscall code for exiting the program
     syscall                                 # exit
 
