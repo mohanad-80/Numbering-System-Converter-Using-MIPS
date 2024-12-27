@@ -188,18 +188,18 @@ DecimalToOther:
     mul  $t1, $t1, 10                       # Multiply current number by 10
     add  $t1, $t1, $t2                      # Add the new digit
     addi $t0, $t0, 1                        # Move to the next character
-    j    StringToDecimal                  # Repeat until the null terminator
+    j    StringToDecimal                    # Repeat until the null terminator
     DecimalDone:
 
     # Base Conversion 
     move $t2, $a1                           # Base of the number system
 
     LoopDecimalToOther:
-    beqz $t1, EndDecimalToOther            # Exit loop if the number is zero
+    beqz $t1, EndDecimalToOther             # Exit loop if the number is zero
     div  $t5, $t1, $t2                      # Divide number by base
     mfhi $t6                                # Save the mod as a digit
     move $t1, $t5                           # Save the integer part as the new number
-    blt  $t6, 10, ConvertDigit             # If digit < 10, handle as digit
+    blt  $t6, 10, ConvertDigit              # If digit < 10, handle as digit
     addi $t6, $t6, 55                       # Add 55 to get the ASCII of the letter
     j    StoreChar
 
@@ -222,7 +222,7 @@ DecimalToOther:
     sb   $t6, 0($t3)                        # Swap: Store $t6 at the end
     addi $t4, $t4, 1                        # Move $t4 forward
     subi $t3, $t3, 1                        # Move $t3 backward
-    blt  $t4, $t3, ReverseLoop             # Continue until $t4 >= $t3
+    blt  $t4, $t3, ReverseLoop              # Continue until $t4 >= $t3
 
     EndReverse:
     jr   $ra                                # Return to the caller
@@ -244,14 +244,14 @@ OtherToDecimal:
     beq  $t4, 10, EndConversion             # If newline character, exit loop
     beqz $t4, EndConversion                 # If null terminator, proceed to string conversion
     subi $t4, $t4, '0'                      # Convert ASCII to digit value
-    blt  $t4, 10, DigitConversion          # If digit < 10, process as is
+    blt  $t4, 10, DigitConversion           # If digit < 10, process as is
     subi $t4, $t4, 7                        # Adjust for letters (A-F)
     
     DigitConversion:
     mul  $t3, $t3, $t1                      # Multiply current result by the base
     add  $t3, $t3, $t4                      # Add the digit to the result
     addi $t0, $t0, 1                        # Move to the next character
-    j    LoopOtherToDecimal                # Repeat until null terminator
+    j    LoopOtherToDecimal                 # Repeat until null terminator
     EndConversion:
 
     # Convert Decimal Result to String
@@ -259,7 +259,7 @@ OtherToDecimal:
 
     CountDigits:
     addi $t5, $t5, 1                        # Move to the next index
-    blt  $t3, $t2, SetupWriting           # if number of digits has been accounted for 
+    blt  $t3, $t2, SetupWriting             # if number of digits has been accounted for 
     mul  $t2, $t2, 10                       # Increase the count for digits 
     j    CountDigits
 
@@ -269,7 +269,7 @@ OtherToDecimal:
     subi $t5, $t5, 1                        # Move back to the last index
 
     WriteDigits:
-    beqz $t3, EndOtherToDecimal            # If result is 0, proceed to writing
+    beqz $t3, EndOtherToDecimal             # If result is 0, proceed to writing
     div  $t3, $t3, $t2                      # Divide result by 10
     mfhi $t1                                # Get the remainder
     addi $t1, $t1, '0'                      # Get ASCII value
@@ -292,4 +292,3 @@ DisplayOutputAndExit:
     # exit program
     li   $v0, 10                            # syscall code for exiting the program
     syscall                                 # exit
-
